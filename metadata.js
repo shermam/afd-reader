@@ -118,10 +118,17 @@ export const metadata = {
     // Time register
     "3": [
         {
+            "description": "Date registered by the employee",
+            "name": "dateRegistered",
+            "type": "date",
+            "from": 11,
+            "to": 18,
+        },
+        {
             "description": "Time registered by the employee",
             "name": "timeRegistered",
-            "type": "datetime",
-            "from": 11,
+            "type": "time",
+            "from": 19,
             "to": 22,
         },
         {
