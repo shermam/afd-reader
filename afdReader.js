@@ -2,13 +2,27 @@ import { metadata } from "./metadata.js";
 
 export function read(textContent) {
     const registers = textContent.split('\n');
+    const labels = ["headers", "employerData", "timeRegister", "clockAdjustment", "employeeData"]
+    const parsedRegisters = {
+        trailer: null
+    };
+
+    for (const label of labels) {
+        parsedRegisters[label] = [];
+    }
 
     // Ignora linha branca no final
     registers.pop();
 
-    const trailer = registers.pop();
+    parsedRegisters.trailer = readRegister(registers.pop(), metadata[9]);
 
-    console.log(readRegister(trailer, metadata[9]));
+    for (const register of registers) {
+        let obj = readRegister(register, metadata[0]);
+        obj = readRegister(register, metadata[obj.tipo], obj);
+        parsedRegisters[labels[obj.tipo - 1]].push(obj);
+    }
+
+    console.log(parsedRegisters);
 
 }
 
@@ -27,7 +41,7 @@ function readRegister(register, meta, obj) {
 function format(type, value) {
     switch (type) {
         case 'text':
-            return value;
+            return value.trim();
         case 'number':
             return Number(value);
         case 'date':
